@@ -1,0 +1,76 @@
+import User from "./components/users/User";
+import React, { useState, useEffect } from "react";
+import AddUser from "./components/users/AddUsers";
+
+function App() {
+  let [users, setUsers] = useState([]);
+  let [showForm, setShowForm] = useState(false);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    const res = await fetch("https://randomuser.me/api/?results=10");
+    console.log(res);
+    const data = await res.json();
+    console.log(data);
+
+    const mappedUsers = data.results.map((user) => {
+      return {
+        uuid: user.login.uuid,
+        name: `${user.name.title} ${user.name.first} ${user.name.last}`,
+        phone: user.phone,
+        cell: user.cell,
+        image: user.picture.thumbnail,
+      };
+    });
+
+    setUsers(mappedUsers);
+  };
+
+  // fetch("https://randomuser.me/api/?results=10")
+  //   .then((res) => res.json())
+  //   .then((users) => {
+  //     let rawUsers = users.results;
+  //     let filteredUsers = rawUsers.map((user) => {});
+  //     setUsers(filteredUsers);
+  //   });
+
+  const removeUser = (uuid) => {
+    let remainUser = users.filter((urs) => urs.uuid !== uuid);
+    setUsers(remainUser);
+  };
+
+  const addUserHandler = (user) => {
+    let newUsers = [user, ...users];
+    setUsers(newUsers);
+    setShowForm(!showForm);
+  };
+
+  const showFormHandler = () => {
+    setShowForm(!showForm);
+  };
+
+  return (
+    <div className="container my-4">
+      <div>
+        <h1 className="text-center ">Our Employees</h1>
+        <button
+          className="btn btn-primary btn-sm my-2"
+          onClick={showFormHandler}
+        >
+          Add User
+        </button>
+
+        {showForm && <AddUser addUser={addUserHandler} />}
+
+        {users.map((usr) => (
+          <User key={usr.uuid} user={usr} remove={removeUser} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default App;
