@@ -5,7 +5,8 @@ import AddPost from "./components/AddPost";
 
 function App() {
   const DB_NAME = "POSTDB";
-  let [posts, setPosts] = useState([]);
+  const initial = JSON.parse(localStorage.getItem(DB_NAME));
+  let [posts, setPosts] = useState(initial) || [];
 
   const AddNewPost = (post) => {
     setPosts([post, ...posts]);
@@ -18,16 +19,18 @@ function App() {
   useEffect(() => {
     let data = localStorage.getItem(DB_NAME);
     if (data) {
-      let parsedData = JSON.parse(data);
-      setPosts(parsedData);
+      setPosts(JSON.parse(data));
     }
-    console.log(setPosts);
   }, []);
+
+  const deleteHander = (id) => {
+    setPosts(posts.filter((post) => post.id !== id));
+  };
 
   return (
     <div className="container">
       <h1 className="text-center text-info my-3">Posts</h1>
-      <Post posts={posts} />
+      <Post posts={posts} removePost={deleteHander} />
       <AddPost addPost={AddNewPost} />
     </div>
   );

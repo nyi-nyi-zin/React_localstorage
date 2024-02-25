@@ -3,6 +3,9 @@ import userImage from "../images/user.png";
 //Grand Child File
 
 class PostCard extends Component {
+  delete() {
+    this.props.deletePost(this.props.post.id);
+  }
   render() {
     return (
       <div className="card mb-2">
@@ -21,7 +24,10 @@ class PostCard extends Component {
             <button className="btn btn-sm btn-warning me-1">
               <i className="fa fa-edit"></i>
             </button>
-            <button className="btn btn-sm btn-danger">
+            <button
+              className="btn btn-sm btn-danger"
+              onClick={this.delete.bind(this)}
+            >
               <i className="fa fa-trash"></i>
             </button>
           </div>
