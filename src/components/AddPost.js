@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { v4 as uuid } from "uuid";
+import { useNavigate } from "react-router-dom";
 
 class AddPost extends Component {
   state = {
@@ -7,9 +8,18 @@ class AddPost extends Component {
     desc: "",
   };
 
+  navigate = () => {
+    this.props.history.push("/");
+  };
+
   addUser = (e) => {
     e.preventDefault();
     this.props.addPost({ id: uuid(), ...this.state });
+    this.setState({
+      title: " ",
+      desc: " ",
+    });
+    this.props.navigate("/");
   };
   render() {
     return (
@@ -17,7 +27,7 @@ class AddPost extends Component {
         <h3 className="text-white text-center mt-3">Add New Post</h3>
         <form onSubmit={this.addUser}>
           <div className="mb-1">
-            <label htmlFor="title" className="form-label">
+            <label htmlFor="title" className="form-label text-white">
               Post Title
             </label>
             <input
@@ -25,11 +35,11 @@ class AddPost extends Component {
               className="form-control"
               id="title"
               onChange={(e) => this.setState({ title: e.target.value })}
-              value={this.state.name}
+              value={this.state.title}
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="desc" className="form-label">
+            <label htmlFor="desc" className="form-label text-white">
               Post Desc
             </label>
             <input
@@ -52,4 +62,7 @@ class AddPost extends Component {
   }
 }
 
-export default AddPost;
+export default (props) => {
+  const navigator = useNavigate();
+  return <AddPost {...props} navigate={navigator} />;
+};

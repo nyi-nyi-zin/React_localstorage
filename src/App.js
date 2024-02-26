@@ -1,26 +1,35 @@
 import React, { useState, useEffect } from "react";
 import Post from "./components/Post";
 import AddPost from "./components/AddPost";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 //Parent root file
 
 function App() {
-  const DB_NAME = "POSTDB";
+  const DB_NAME = "PostDB";
+  const END_POINT = "http://localhost:9000/posts";
   const initial = JSON.parse(localStorage.getItem(DB_NAME));
-  let [posts, setPosts] = useState(initial) || [];
+  let [posts, setPosts] = useState(initial || []);
 
-  const AddNewPost = (post) => {
+  const AddNewPost = async (post) => {
+    await fetch(END_POINT, {
+      method: "POST",
+      body: JSON.stringify({
+        title: post.title,
+        desc: post.desc,
+      }),
+      headers: {
+        "content-type": "application/json",
+      },
+    });
     setPosts([post, ...posts]);
   };
 
   useEffect(() => {
-    localStorage.setItem(DB_NAME, JSON.stringify(posts));
-  }, [posts]);
-
-  useEffect(() => {
-    let data = localStorage.getItem(DB_NAME);
-    if (data) {
-      setPosts(JSON.parse(data));
-    }
+    const fetchData = async () => {
+      let data = await (await fetch(`${END_POINT}/posts`)).json();
+      setPosts(data);
+    };
   }, []);
 
   const deleteHander = (id) => {
@@ -30,8 +39,16 @@ function App() {
   return (
     <div className="container">
       <h1 className="text-center text-info my-3">Posts</h1>
-      <Post posts={posts} removePost={deleteHander} />
-      <AddPost addPost={AddNewPost} />
+
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={<Post posts={posts} removePost={deleteHander} />}
+          />
+          <Route path="/add" element={<AddPost addPost={AddNewPost} />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
