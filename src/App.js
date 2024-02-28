@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ACompo from "./components/ACompo";
 import BCompo from "./components/BCompo";
+import TitleContextProvider from "./components/TestContext";
 
 const h1_style = {
   color: "red",
@@ -11,11 +12,13 @@ const h1_style = {
 
 function App() {
   return (
-    <div className="container">
-      <h1 style={h1_style}>Context Api</h1>
-      <ACompo />
-      <BCompo />
-    </div>
+    <TitleContextProvider>
+      <div className="container">
+        <h1 style={h1_style}>Context Api</h1>
+        <ACompo />
+        <BCompo />
+      </div>
+    </TitleContextProvider>
   );
 }
 
