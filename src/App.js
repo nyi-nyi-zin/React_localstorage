@@ -1,26 +1,20 @@
 import React, { useState, useEffect } from "react";
-import AddUser from "./components/AddUser";
+import ACompo from "./components/ACompo";
+import BCompo from "./components/BCompo";
+
+const h1_style = {
+  color: "red",
+  fontWeight: "bold",
+};
 
 //Parent root file
 
 function App() {
-  const [user, setUser] = useState({});
-
-  const addUserHandler = (newUser) => {
-    setUser((previous) => {
-      return {
-        id: 1,
-        name: newUser.name,
-        password: newUser.password,
-      };
-    });
-  };
-
   return (
     <div className="container">
-      <h1>Username : {user.name}</h1>
-      <h1>Password : {user.password}</h1>
-      <AddUser addUser={addUserHandler} />
+      <h1 style={h1_style}>Context Api</h1>
+      <ACompo />
+      <BCompo />
     </div>
   );
 }
