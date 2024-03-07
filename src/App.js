@@ -1,24 +1,41 @@
 import React, { useState, useEffect } from "react";
-import ACompo from "./components/ACompo";
-import BCompo from "./components/BCompo";
-import TitleContextProvider from "./components/TestContext";
+import { ThemeProvider } from "styled-components";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Container } from "./styles/shares";
+import { GlobalCSS } from "./styles/GlobalCSS";
+import Nav from "./components/Nav";
+import Home from "./components/Home";
+import Login from "./components/Login";
+import LoginContextProvider from "./store/LoginContextApi";
+import { RouteGuard } from "./Helper/RouteGuard";
 
-const h1_style = {
-  color: "red",
-  fontWeight: "bold",
+const theme = {
+  colors: {
+    primary: "aliceblue",
+  },
 };
-
-//Parent root file
-
 function App() {
   return (
-    <TitleContextProvider>
-      <div className="container">
-        <h1 style={h1_style}>Context Api</h1>
-        <ACompo />
-        <BCompo />
-      </div>
-    </TitleContextProvider>
+    <ThemeProvider theme={theme}>
+      <GlobalCSS />
+      <Container>
+        <LoginContextProvider>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Login />}></Route>
+              <Route
+                path="/home"
+                element={
+                  <RouteGuard>
+                    <Home />
+                  </RouteGuard>
+                }
+              ></Route>
+            </Routes>
+          </Router>
+        </LoginContextProvider>
+      </Container>
+    </ThemeProvider>
   );
 }
 
